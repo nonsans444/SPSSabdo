@@ -36,7 +36,9 @@ export default function App() {
     try {
       const saved = localStorage.getItem('spss_dark_mode');
       if (saved !== null) return saved === 'true';
-      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+      return typeof window !== 'undefined' && typeof window.matchMedia === 'function'
+        ? window.matchMedia('(prefers-color-scheme: dark)').matches
+        : false;
     } catch {
       return false;
     }
