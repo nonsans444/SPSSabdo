@@ -33,9 +33,6 @@ export const ClassForm: React.FC<ClassFormProps> = ({
   const [nonReadersCount, setNonReadersCount] = useState<string>('');
   const [notes, setNotes] = useState<string>('');
 
-  // Quick class level badges (Algerian system: Primary AP, Middle AM, High AS)
-  const quickClasses = ['1AM1', '2AM2', '3AM2', '4AM1', '1AS1', '2AS3', '3AS2', '5AP'];
-
   // Calculate live results
   const liveResult = calculateLiveStats(totalStudents, readersCount, nonReadersCount, lang);
 
@@ -79,23 +76,14 @@ export const ClassForm: React.FC<ClassFormProps> = ({
   };
 
   const handleReset = () => {
-    setClassName('');
     setTotalStudents('');
     setReadersCount('');
     setNonReadersCount('');
     setNotes('');
   };
 
-  const handleQuickClassSelect = (cls: string) => {
-    setClassName(cls);
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!className.trim()) {
-      return;
-    }
 
     if (!liveResult.isValid) {
       return;
@@ -107,7 +95,7 @@ export const ClassForm: React.FC<ClassFormProps> = ({
     onSaveClass({
       teacherName: teacherName.trim() || undefined,
       schoolName: schoolName.trim() || undefined,
-      className: className.trim(),
+      className: '',
       totalStudents: numTotal,
       readersCount: numReaders,
       nonReadersCount: numNonReaders,
@@ -170,38 +158,6 @@ export const ClassForm: React.FC<ClassFormProps> = ({
                   placeholder={t.schoolNamePlaceholder}
                   className="w-full px-3.5 py-2.5 rounded-xl text-sm border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-[#006233] focus:border-transparent transition-all min-h-[44px]"
                 />
-              </div>
-            </div>
-
-            {/* Class Name / Level with Quick Chips */}
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                {t.className} <span className="text-rose-500">*</span>
-              </label>
-              <input
-                type="text"
-                required
-                value={className}
-                onChange={(e) => setClassName(e.target.value)}
-                placeholder={t.classNamePlaceholder}
-                className="w-full px-3.5 py-2.5 rounded-xl text-sm font-semibold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-[#006233] focus:border-transparent transition-all min-h-[44px]"
-              />
-
-              {/* Quick Algerian Class Tags */}
-              <div className="flex items-center gap-1.5 flex-wrap mt-2">
-                <span className="text-[11px] text-slate-600 dark:text-slate-400 font-medium">
-                  {lang === 'ar' ? 'أمثلة سريعة:' : lang === 'fr' ? 'Exemples rapides :' : 'Quick codes:'}
-                </span>
-                {quickClasses.map((cls) => (
-                  <button
-                    type="button"
-                    key={cls}
-                    onClick={() => handleQuickClassSelect(cls)}
-                    className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-slate-100 hover:bg-emerald-50 dark:bg-slate-800 dark:hover:bg-emerald-950/40 text-slate-700 dark:text-slate-300 hover:text-[#006233] dark:hover:text-emerald-400 border border-slate-200 dark:border-slate-700 transition-colors"
-                  >
-                    {cls}
-                  </button>
-                ))}
               </div>
             </div>
 
@@ -336,10 +292,10 @@ export const ClassForm: React.FC<ClassFormProps> = ({
             <div className="pt-1">
               <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 {lang === 'ar'
-                  ? 'ملاحظات بيداغوجية حول الفوج (اختياري)'
+                  ? 'ملاحظات بيداغوجية (اختياري)'
                   : lang === 'fr'
-                  ? 'Observations pédagogiques sur la classe (optionnel)'
-                  : 'Class Pedagogical Notes (optional)'}
+                  ? 'Observations pédagogiques (optionnel)'
+                  : 'Pedagogical Notes (optional)'}
               </label>
               <textarea
                 rows={2}
@@ -360,9 +316,9 @@ export const ClassForm: React.FC<ClassFormProps> = ({
             <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
               <button
                 type="submit"
-                disabled={!liveResult.isValid || !className.trim()}
+                disabled={!liveResult.isValid}
                 className={`w-full sm:flex-1 h-12 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-md min-h-[48px] ${
-                  liveResult.isValid && className.trim()
+                  liveResult.isValid
                     ? 'bg-[#006233] hover:bg-[#00542c] text-white cursor-pointer active:scale-[0.99]'
                     : 'bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-600 cursor-not-allowed shadow-none'
                 }`}

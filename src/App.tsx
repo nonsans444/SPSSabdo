@@ -84,8 +84,17 @@ export default function App() {
 
   // Add new class record
   const handleSaveClass = (recordData: Omit<ClassRecord, 'id' | 'createdAt'>) => {
+    const evalNumber = classes.length + 1;
+    const defaultName =
+      lang === 'ar'
+        ? `تقييم #${evalNumber}`
+        : lang === 'fr'
+        ? `Évaluation #${evalNumber}`
+        : `Evaluation #${evalNumber}`;
+
     const newRecord: ClassRecord = {
       ...recordData,
+      className: recordData.className && recordData.className.trim() ? recordData.className.trim() : defaultName,
       id: 'class-' + Date.now() + '-' + Math.random().toString(36).substring(2, 7),
       createdAt: new Date().toISOString(),
     };
