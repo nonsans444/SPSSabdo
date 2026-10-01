@@ -4,35 +4,29 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { EvaluationLevel, Language } from './types';
+import { ClassRecord, Language } from './types';
 import { translations } from './i18n/translations';
-import { getEvaluationLevel } from './utils/calculator';
+import {
+  getStoredClasses,
+  saveStoredClasses,
+  getStoredProfile,
+  saveStoredProfile,
+  exportClassesAsJson,
+  parseClassesJson,
+  SAMPLE_CLASSES,
+} from './utils/storage';
 import { Header } from './components/Header';
 import { ClassForm } from './components/ClassForm';
-import { DonutChart, GradeDisplay, HorizontalBar } from './components/Charts';
+import { RecordsView } from './components/RecordsView';
 import { ReportView } from './components/ReportView';
 import { ZelligeBackground } from './components/AlgerianEmblem';
-import { Sparkles, BarChart3, HelpCircle } from 'lucide-react';
-
-interface CalculatedData {
-  schoolName: string;
-  teacherName: string;
-  className: string;
-  totalStudents: number;
-  readersCount: number;
-  nonReadersCount: number;
-  readerPercentage: number;
-  nonReaderPercentage: number;
-  grade: number;
-  level: EvaluationLevel;
-  notes?: string;
-}
+import { Calculator, BookOpen, FileText, CheckCircle2, AlertCircle } from 'lucide-react';
 
 export default function App() {
   const [lang, setLang] = useState<Language>(() => {
     try {
       const saved = localStorage.getItem('spss_language');
-      return saved === 'fr' || saved === 'en' || saved === 'ar' ? saved : 'ar';
+      return (saved === 'fr' || saved === 'en' || saved === 'ar') ? saved : 'ar';
     } catch {
       return 'ar';
     }
@@ -50,13 +44,14 @@ export default function App() {
     }
   });
 
-  // Calculation state: null until "Calculate Statistics" is clicked and validation succeeds
-  const [calculatedData, setCalculatedData] = useState<CalculatedData | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'calculator' | 'records' | 'report'>('calculator');
+  const [classes, setClasses] = useState<ClassRecord[]>(() => getStoredClasses());
+  const [profile, setProfile] = useState(() => getStoredProfile());
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   const t = translations[lang];
 
-  // Sync html language and direction attributes
+  // Sync language and direction
   useEffect(() => {
     document.documentElement.lang = lang;
     document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
@@ -67,7 +62,7 @@ export default function App() {
     }
   }, [lang]);
 
-  // Sync dark mode class
+  // Sync dark mode
   useEffect(() => {
     if (isDark) {
       document.documentElement.classList.add('dark');
@@ -81,47 +76,112 @@ export default function App() {
     }
   }, [isDark]);
 
-  // Handler for Calculate Statistics button press
-  const handleCalculate = (data: {
-    teacherName: string;
-    schoolName: string;
-    className: string;
-    totalStudents: number;
-    readersCount: number;
-    nonReadersCount: number;
-    notes: string;
-  }) => {
-    const { totalStudents, readersCount, nonReadersCount } = data;
-
-    // Mathematical calculations:
-    // Reader percentage = readers / total x 100
-    // Non-reader percentage = non-readers / total x 100
-    // Note (grade) = readers / total x 20, rounded to one decimal
-    const readerPct = Math.round((readersCount / totalStudents) * 1000) / 10;
-    const nonReaderPct = Math.round((nonReadersCount / totalStudents) * 1000) / 10;
-    const rawGrade = (readersCount / totalStudents) * 20;
-    const grade = Math.round(rawGrade * 10) / 10;
-    const level = getEvaluationLevel(readerPct);
-
-    setCalculatedData({
-      schoolName: data.schoolName,
-      teacherName: data.teacherName,
-      className: data.className,
-      totalStudents,
-      readersCount,
-      nonReadersCount,
-      readerPercentage: readerPct,
-      nonReaderPercentage: nonReaderPct,
-      grade,
-      level,
-      notes: data.notes,
-    });
-    setErrorMessage(null);
+  // Show auto-dismissing toast
+  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => {
+      setToast((prev) => (prev?.message === message ? null : prev));
+    }, 3200);
   };
 
-  const handleReset = () => {
-    setCalculatedData(null);
-    setErrorMessage(null);
+  // Add new class record
+  const handleSaveClass = (recordData: Omit<ClassRecord, 'id' | 'createdAt'>) => {
+    const evalNumber = classes.length + 1;
+    const defaultName =
+      lang === 'ar'
+        ? `تقييم #${evalNumber}`
+        : lang === 'fr'
+        ? `Évaluation #${evalNumber}`
+        : `Evaluation #${evalNumber}`;
+
+    const newRecord: ClassRecord = {
+      ...recordData,
+      className: recordData.className && recordData.className.trim() ? recordData.className.trim() : defaultName,
+      id: 'class-' + Date.now() + '-' + Math.random().toString(36).substring(2, 7),
+      createdAt: new Date().toISOString(),
+    };
+
+    const updated = [newRecord, ...classes];
+    setClasses(updated);
+    saveStoredClasses(updated);
+    showToast(t.savedSuccessToast, 'success');
+  };
+
+  // Delete single class
+  const handleDeleteClass = (id: string) => {
+    const updated = classes.filter((c) => c.id !== id);
+    setClasses(updated);
+    saveStoredClasses(updated);
+    showToast(t.deletedSuccessToast, 'success');
+  };
+
+  // Clear all classes
+  const handleClearAll = () => {
+    setClasses([]);
+    saveStoredClasses([]);
+    showToast(t.deletedSuccessToast, 'success');
+  };
+
+  // Load sample dataset
+  const handleLoadSampleData = () => {
+    setClasses(SAMPLE_CLASSES);
+    saveStoredClasses(SAMPLE_CLASSES);
+    showToast(
+      lang === 'ar'
+        ? 'تم تحميل البيانات التجريبية بنجاح!'
+        : lang === 'fr'
+        ? 'Données de démonstration chargées !'
+        : 'Sample data loaded successfully!'
+    );
+  };
+
+  // Export JSON
+  const handleExportJson = () => {
+    exportClassesAsJson(classes);
+    showToast(
+      lang === 'ar'
+        ? 'تم تصدير ملف النسخة الاحتياطية بنجاح.'
+        : lang === 'fr'
+        ? 'Sauvegarde exportée avec succès.'
+        : 'Backup exported successfully.'
+    );
+  };
+
+  // Import JSON
+  const handleImportJson = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const content = e.target?.result as string;
+      const parsed = parseClassesJson(content);
+      if (parsed) {
+        setClasses(parsed);
+        saveStoredClasses(parsed);
+        showToast(
+          lang === 'ar'
+            ? `تم استيراد ${parsed.length} فوج بنجاح!`
+            : lang === 'fr'
+            ? `${parsed.length} classes importées !`
+            : `${parsed.length} classes imported!`
+        );
+      } else {
+        showToast(
+          lang === 'ar'
+            ? 'ملف غير صالح. يُرجى التحقق من صحة ملف JSON.'
+            : lang === 'fr'
+            ? 'Fichier JSON invalide.'
+            : 'Invalid JSON backup file.',
+          'error'
+        );
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  // Update teacher profile
+  const handleUpdateProfile = (teacherName: string, schoolName: string) => {
+    const updated = { teacherName, schoolName };
+    setProfile(updated);
+    saveStoredProfile(updated);
   };
 
   return (
@@ -130,114 +190,127 @@ export default function App() {
         isDark ? 'dark bg-[#0F1713] text-[#FAF7F2]' : 'bg-[#FAF7F2] text-slate-900'
       }`}
     >
-      {/* Algerian Islamic geometric zellige backdrop */}
+      {/* Algerian Islamic Zellige background pattern */}
       <ZelligeBackground isDark={isDark} />
 
       {/* Top Application Header */}
       <Header
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
         lang={lang}
         setLang={setLang}
         isDark={isDark}
         setIsDark={setIsDark}
+        recordsCount={classes.length}
       />
 
-      {/* Main Single-View Flow: Input Form -> Results -> Reports Area */}
-      <main className="flex-1 max-w-5xl w-full mx-auto px-4 py-6 relative z-10 space-y-6 pb-16">
-        {/* 1. Data Input Form */}
-        <section>
+      {/* Main Content Area */}
+      <main className="flex-1 relative z-10 pb-20 sm:pb-8">
+        {activeTab === 'calculator' && (
           <ClassForm
-            onCalculate={handleCalculate}
-            errorMessage={errorMessage}
-            setErrorMessage={setErrorMessage}
-            onReset={handleReset}
+            onSaveClass={handleSaveClass}
+            lang={lang}
+            isDark={isDark}
+            defaultTeacherName={profile.teacherName}
+            defaultSchoolName={profile.schoolName}
+            onUpdateProfile={handleUpdateProfile}
+          />
+        )}
+
+        {activeTab === 'records' && (
+          <RecordsView
+            classes={classes}
+            onDeleteClass={handleDeleteClass}
+            onClearAll={handleClearAll}
+            onExportJson={handleExportJson}
+            onImportJson={handleImportJson}
+            onGoToCalculator={() => setActiveTab('calculator')}
+            onGoToReport={() => setActiveTab('report')}
+            onLoadSampleData={handleLoadSampleData}
             lang={lang}
             isDark={isDark}
           />
-        </section>
-
-        {/* Informational Prompt when not calculated yet */}
-        {!calculatedData && !errorMessage && (
-          <div className="no-print bg-white/70 dark:bg-[#17241C]/70 backdrop-blur-xs rounded-2xl p-6 text-center border border-dashed border-slate-300 dark:border-slate-800 text-slate-500 dark:text-slate-400 text-xs sm:text-sm flex items-center justify-center gap-2">
-            <HelpCircle className="w-4 h-4 text-emerald-700 dark:text-emerald-400 shrink-0" />
-            <span>{t.calculatePrompt}</span>
-          </div>
         )}
 
-        {/* 2. Statistical Results Area (ONLY visible after pressing Calculate) */}
-        {calculatedData && (
-          <section className="no-print bg-white dark:bg-[#17241C] rounded-2xl p-5 sm:p-7 shadow-sm border border-slate-200/80 dark:border-emerald-900/40 space-y-6">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-              <div className="flex items-center gap-2">
-                <BarChart3 className="w-5 h-5 text-[#006233] dark:text-emerald-400" />
-                <h2 className="text-xl font-bold text-slate-900 dark:text-white">
-                  {t.resultsSectionTitle}
-                </h2>
-              </div>
-              <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-1 rounded-full">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>{calculatedData.className ? calculatedData.className : (lang === 'ar' ? 'القسم' : 'Classe')}</span>
-              </div>
-            </div>
-
-            {/* Results Grid: Grade Display, Donut Chart, and Horizontal Comparison */}
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-              {/* Donut Chart (md:col-span-5) */}
-              <div className="md:col-span-5 flex justify-center">
-                <DonutChart
-                  readerPercentage={calculatedData.readerPercentage}
-                  nonReaderPercentage={calculatedData.nonReaderPercentage}
-                  readersCount={calculatedData.readersCount}
-                  nonReadersCount={calculatedData.nonReadersCount}
-                  total={calculatedData.totalStudents}
-                  lang={lang}
-                  size={200}
-                />
-              </div>
-
-              {/* Grade Display & Comparative Bar (md:col-span-7) */}
-              <div className="md:col-span-7 space-y-4">
-                <GradeDisplay
-                  grade={calculatedData.grade}
-                  level={calculatedData.level}
-                  lang={lang}
-                  isDark={isDark}
-                />
-
-                <div className="pt-1">
-                  <span className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
-                    {t.ratioComparison}
-                  </span>
-                  <HorizontalBar
-                    readers={calculatedData.readersCount}
-                    nonReaders={calculatedData.nonReadersCount}
-                    total={calculatedData.totalStudents}
-                    lang={lang}
-                  />
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* 3. Reports Area with Print Full Report (ONLY visible after calculation) */}
-        {calculatedData && (
+        {activeTab === 'report' && (
           <ReportView
-            schoolName={calculatedData.schoolName}
-            teacherName={calculatedData.teacherName}
-            className={calculatedData.className}
-            totalStudents={calculatedData.totalStudents}
-            readersCount={calculatedData.readersCount}
-            nonReadersCount={calculatedData.nonReadersCount}
-            readerPercentage={calculatedData.readerPercentage}
-            nonReaderPercentage={calculatedData.nonReaderPercentage}
-            grade={calculatedData.grade}
-            level={calculatedData.level}
-            notes={calculatedData.notes}
+            classes={classes}
+            teacherName={profile.teacherName}
+            schoolName={profile.schoolName}
             lang={lang}
+            onBack={() => setActiveTab('records')}
             isDark={isDark}
           />
         )}
       </main>
+
+      {/* Mobile Bottom Thumb Bar (under 15% sticky height, high touch hitboxes) */}
+      <div className="no-print sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#121C16]/95 backdrop-blur-md border-t border-slate-200/80 dark:border-emerald-950/60 shadow-lg">
+        <div className="grid grid-cols-3 h-15 items-center px-2">
+          <button
+            onClick={() => setActiveTab('calculator')}
+            className={`flex flex-col items-center justify-center py-1 rounded-xl transition-colors min-h-[48px] ${
+              activeTab === 'calculator'
+                ? 'text-[#006233] dark:text-emerald-400 font-bold'
+                : 'text-slate-500 dark:text-slate-400'
+            }`}
+          >
+            <Calculator className="w-5 h-5 mb-0.5" />
+            <span className="text-[10px]">{t.navCalculator}</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('records')}
+            className={`flex flex-col items-center justify-center py-1 rounded-xl transition-colors min-h-[48px] relative ${
+              activeTab === 'records'
+                ? 'text-[#006233] dark:text-emerald-400 font-bold'
+                : 'text-slate-500 dark:text-slate-400'
+            }`}
+          >
+            <div className="relative">
+              <BookOpen className="w-5 h-5 mb-0.5" />
+              {classes.length > 0 && (
+                <span className="absolute -top-1 -end-2 w-4 h-4 bg-[#006233] text-white rounded-full text-[9px] font-bold flex items-center justify-center">
+                  {classes.length}
+                </span>
+              )}
+            </div>
+            <span className="text-[10px]">{t.navRecords}</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('report')}
+            className={`flex flex-col items-center justify-center py-1 rounded-xl transition-colors min-h-[48px] ${
+              activeTab === 'report'
+                ? 'text-[#006233] dark:text-emerald-400 font-bold'
+                : 'text-slate-500 dark:text-slate-400'
+            }`}
+          >
+            <FileText className="w-5 h-5 mb-0.5" />
+            <span className="text-[10px]">{t.navReport}</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Floating Toast Notification */}
+      {toast && (
+        <div className="fixed bottom-18 sm:bottom-6 start-1/2 -translate-x-1/2 z-50 animate-slideUp">
+          <div
+            className={`flex items-center gap-2.5 px-4 py-2.5 rounded-xl shadow-xl text-xs sm:text-sm font-semibold border ${
+              toast.type === 'success'
+                ? 'bg-[#006233] text-white border-emerald-600'
+                : 'bg-rose-600 text-white border-rose-500'
+            }`}
+          >
+            {toast.type === 'success' ? (
+              <CheckCircle2 className="w-4 h-4 shrink-0" />
+            ) : (
+              <AlertCircle className="w-4 h-4 shrink-0" />
+            )}
+            <span>{toast.message}</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
