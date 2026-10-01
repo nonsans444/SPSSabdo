@@ -1,0 +1,6 @@
+{
+  "name": "SPSS - Students' Passion for Reading Statistics System",
+  "description": "نظام إحصاء شغف المطالعة لدى التلاميذ - Educational reading statistics, grades calculation, and pedagogical reporting for Algerian schools.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

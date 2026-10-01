@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --dz-green: #006233;
+    --dz-red: #D21034;
+    --dz-gold: #C59B27;
+    --dz-cream: #FAF7F2;
+    --dz-cream-card: #FFFFFF;
+  }
+
+  body {
+    font-family: 'Tajawal', 'Cairo', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 98, 51, 0.2);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 98, 51, 0.4);
+}
+
+/* Number input clean up */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Print specifications for the Algerian Pedagogical Report */
+@media print {
+  body {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    font-size: 12pt;
+    margin: 0;
+    padding: 0;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .page-break {
+    page-break-after: always;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 1.5cm;
+  }
+}
