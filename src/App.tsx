@@ -89,10 +89,10 @@ export default function App() {
     const evalNumber = classes.length + 1;
     const defaultName =
       lang === 'ar'
-        ? `تقييم #${evalNumber}`
+        ? `تخصص جامعي #${evalNumber}`
         : lang === 'fr'
-        ? `Évaluation #${evalNumber}`
-        : `Evaluation #${evalNumber}`;
+        ? `Filière #${evalNumber}`
+        : `Major #${evalNumber}`;
 
     const newRecord: ClassRecord = {
       ...recordData,
@@ -158,10 +158,10 @@ export default function App() {
         saveStoredClasses(parsed);
         showToast(
           lang === 'ar'
-            ? `تم استيراد ${parsed.length} فوج بنجاح!`
+            ? `تم استيراد ${parsed.length} تخصص جامعي بنجاح!`
             : lang === 'fr'
-            ? `${parsed.length} classes importées !`
-            : `${parsed.length} classes imported!`
+            ? `${parsed.length} filières importées !`
+            : `${parsed.length} majors imported!`
         );
       } else {
         showToast(

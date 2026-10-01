@@ -1,68 +1,83 @@
 import { ClassRecord } from '../types';
 
-const STORAGE_KEY = 'spss_reading_classes_records_v1';
-const PROFILE_KEY = 'spss_teacher_profile_v1';
+const STORAGE_KEY = 'spss_university_specialties_records_v2';
+const PROFILE_KEY = 'spss_university_profile_v2';
 
 export const SAMPLE_CLASSES: ClassRecord[] = [
   {
     id: 'sample-1',
-    teacherName: 'أ. عبد القادر بن عيسى',
-    schoolName: 'متوسطة الإخوة بوعزيز',
-    className: '3م2 (3AM2)',
-    totalStudents: 32,
-    readersCount: 26,
-    nonReadersCount: 6,
-    readerPercentage: 81.3,
-    nonReaderPercentage: 18.7,
-    grade: 16.3,
+    teacherName: 'د. أستاذ محاضر',
+    schoolName: 'جامعة الجزائر',
+    className: 'الإعلام الآلي (Informatique)',
+    totalStudents: 45,
+    readersCount: 38,
+    nonReadersCount: 7,
+    readerPercentage: 84.4,
+    nonReaderPercentage: 15.6,
+    grade: 16.9,
     level: 'excellent',
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3).toISOString(),
-    notes: 'تفاعل ممتاز مع مسابقة تحدي القراءة العربي وزيارات أسبوعية للمكتبة.',
+    notes: 'إقبال كبير على المراجع البرمجية والكتب الرقمية والمنصات العلمية المفتوحة.',
   },
   {
     id: 'sample-2',
-    teacherName: 'أ. عبد القادر بن عيسى',
-    schoolName: 'متوسطة الإخوة بوعزيز',
-    className: '2م4 (2AM4)',
-    totalStudents: 30,
-    readersCount: 19,
-    nonReadersCount: 11,
-    readerPercentage: 63.3,
-    nonReaderPercentage: 36.7,
-    grade: 12.7,
-    level: 'good',
+    teacherName: 'د. أستاذ محاضر',
+    schoolName: 'جامعة الجزائر',
+    className: 'الطب البشري (Médecine Générale)',
+    totalStudents: 60,
+    readersCount: 52,
+    nonReadersCount: 8,
+    readerPercentage: 86.7,
+    nonReaderPercentage: 13.3,
+    grade: 17.3,
+    level: 'excellent',
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString(),
-    notes: 'تحسن ملحوظ لدى إناث الفوج مقارنة بالذكور في استعارة القصص.',
+    notes: 'مطالعة مستمرة للمجلات الطبية والمراجع السريرية وزيارات منتظمة للمكتبة المركزية.',
   },
   {
     id: 'sample-3',
-    teacherName: 'أ. عبد القادر بن عيسى',
-    schoolName: 'متوسطة الإخوة بوعزيز',
-    className: '4م1 (4AM1)',
-    totalStudents: 35,
-    readersCount: 13,
-    nonReadersCount: 22,
-    readerPercentage: 37.1,
-    nonReaderPercentage: 62.9,
-    grade: 7.4,
-    level: 'needs_encouragement',
+    teacherName: 'د. أستاذ محاضر',
+    schoolName: 'جامعة الجزائر',
+    className: 'العلوم الاقتصادية والتسيير (Sciences Économiques)',
+    totalStudents: 50,
+    readersCount: 34,
+    nonReadersCount: 16,
+    readerPercentage: 68.0,
+    nonReaderPercentage: 32.0,
+    grade: 13.6,
+    level: 'good',
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 1).toISOString(),
-    notes: 'انشغال التلاميذ بتحضير شهادة التعليم المتوسط (BEM)، يوصى بمطالعة خفيفة مجدولة.',
+    notes: 'تفاعل جيد في قراءة كتب الاقتصاد الكلي والتحليل المالي وريادة الأعمال.',
   },
   {
     id: 'sample-4',
-    teacherName: 'أ. عبد القادر بن عيسى',
-    schoolName: 'متوسطة الإخوة بوعزيز',
-    className: '1م3 (1AM3)',
-    totalStudents: 28,
-    readersCount: 22,
-    nonReadersCount: 6,
-    readerPercentage: 78.6,
-    nonReaderPercentage: 21.4,
-    grade: 15.7,
+    teacherName: 'د. أستاذ محاضر',
+    schoolName: 'جامعة الجزائر',
+    className: 'الحقوق والعلوم السياسية (Droit & Sciences Juridiques)',
+    totalStudents: 55,
+    readersCount: 42,
+    nonReadersCount: 13,
+    readerPercentage: 76.4,
+    nonReaderPercentage: 23.6,
+    grade: 15.3,
     level: 'excellent',
+    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 12).toISOString(),
+    notes: 'اهتمام بارز بالمراجع القانونية والجريدة الرسمية والتشريعات الجزائرية.',
+  },
+  {
+    id: 'sample-5',
+    teacherName: 'د. أستاذ محاضر',
+    schoolName: 'جامعة الجزائر',
+    className: 'الهندسة المعمارية والعمران (Architecture & Urbanisme)',
+    totalStudents: 36,
+    readersCount: 22,
+    nonReadersCount: 14,
+    readerPercentage: 61.1,
+    nonReaderPercentage: 38.9,
+    grade: 12.2,
+    level: 'good',
     createdAt: new Date().toISOString(),
-    notes: 'فوج نشيط ومقبل على قراءة الروايات والقصص التاريخية الجزائرية.',
+    notes: 'حاجة لدعم رصيد المكتبة بكتب التصميم المعماري الحديث والتراث العمراني الجزائري.',
   },
 ];
 
@@ -70,12 +85,23 @@ export function getStoredClasses(): ClassRecord[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) {
-      // First time initialization: populate sample classes so teacher/inspector has immediate visibility
       localStorage.setItem(STORAGE_KEY, JSON.stringify(SAMPLE_CLASSES));
       return SAMPLE_CLASSES;
     }
     const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed)) {
+    if (Array.isArray(parsed) && parsed.length > 0) {
+      // Check if it's the old middle school dataset
+      const isOldData = parsed.some(
+        (c) =>
+          c.className?.includes('3AM') ||
+          c.className?.includes('3م2') ||
+          c.teacherName?.includes('عبد القادر بن عيسى') ||
+          c.schoolName?.includes('متوسطة')
+      );
+      if (isOldData) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(SAMPLE_CLASSES));
+        return SAMPLE_CLASSES;
+      }
       return parsed;
     }
     return SAMPLE_CLASSES;
@@ -104,14 +130,21 @@ export function getStoredProfile(): TeacherProfile {
   try {
     const raw = localStorage.getItem(PROFILE_KEY);
     if (raw) {
-      return JSON.parse(raw);
+      const parsed = JSON.parse(raw);
+      if (parsed.teacherName && parsed.teacherName.includes('عبد القادر')) {
+        parsed.teacherName = '';
+      }
+      if (parsed.schoolName && (parsed.schoolName.includes('متوسطة') || parsed.schoolName.includes('بوعزيز'))) {
+        parsed.schoolName = '';
+      }
+      return parsed;
     }
   } catch (e) {
     console.warn(e);
   }
   return {
-    teacherName: 'أ. عبد القادر بن عيسى',
-    schoolName: 'متوسطة الإخوة بوعزيز',
+    teacherName: '',
+    schoolName: '',
   };
 }
 
@@ -127,7 +160,7 @@ export function exportClassesAsJson(classes: ClassRecord[]): void {
   const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(classes, null, 2));
   const downloadAnchor = document.createElement('a');
   downloadAnchor.setAttribute('href', dataStr);
-  downloadAnchor.setAttribute('download', `spss_reading_stats_backup_${new Date().toISOString().slice(0, 10)}.json`);
+  downloadAnchor.setAttribute('download', `spss_university_specialties_${new Date().toISOString().slice(0, 10)}.json`);
   document.body.appendChild(downloadAnchor);
   downloadAnchor.click();
   downloadAnchor.remove();
@@ -137,7 +170,6 @@ export function parseClassesJson(jsonText: string): ClassRecord[] | null {
   try {
     const parsed = JSON.parse(jsonText);
     if (Array.isArray(parsed)) {
-      // Validate basic shape
       const valid = parsed.every(
         (c) => typeof c.className === 'string' && typeof c.totalStudents === 'number'
       );

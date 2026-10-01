@@ -1,0 +1,178 @@
+export interface UniversitySpecialty {
+  code: string;
+  nameAr: string;
+  nameFr: string;
+  facultyAr: string;
+  category: 'sciences' | 'medical' | 'technology' | 'economics' | 'humanities' | 'law';
+}
+
+export const ALGERIAN_UNIVERSITY_SPECIALTIES: UniversitySpecialty[] = [
+  {
+    code: 'INFO',
+    nameAr: 'الإعلام الآلي (Informatique)',
+    nameFr: 'Informatique',
+    facultyAr: 'كلية العلوم',
+    category: 'sciences',
+  },
+  {
+    code: 'AI',
+    nameAr: 'الذكاء الاصطناعي وعلوم البيانات (IA & Data Science)',
+    nameFr: 'Intelligence Artificielle',
+    facultyAr: 'المدرسة العليا للذكاء الاصطناعي / كلية العلوم',
+    category: 'technology',
+  },
+  {
+    code: 'MED',
+    nameAr: 'الطب البشري (Médecine Générale)',
+    nameFr: 'Médecine Générale',
+    facultyAr: 'كلية الطب',
+    category: 'medical',
+  },
+  {
+    code: 'PHARM',
+    nameAr: 'الصيدلة (Pharmacie)',
+    nameFr: 'Pharmacie',
+    facultyAr: 'كلية الصيدلة',
+    category: 'medical',
+  },
+  {
+    code: 'DENT',
+    nameAr: 'جراحة الأسنان (Chirurgie Dentaire)',
+    nameFr: 'Chirurgie Dentaire',
+    facultyAr: 'كلية الطب',
+    category: 'medical',
+  },
+  {
+    code: 'ECON',
+    nameAr: 'العلوم الاقتصادية والتسيير (Sciences Économiques & Gestion)',
+    nameFr: 'Sciences Économiques',
+    facultyAr: 'كلية العلوم الاقتصادية والتجارية',
+    category: 'economics',
+  },
+  {
+    code: 'FIN',
+    nameAr: 'علوم مالية ومحاسبة وبنوك (Finance & Comptabilité)',
+    nameFr: 'Finance & Comptabilité',
+    facultyAr: 'كلية العلوم التجارية',
+    category: 'economics',
+  },
+  {
+    code: 'LAW',
+    nameAr: 'الحقوق والعلوم القانونية (Droit & Sciences Juridiques)',
+    nameFr: 'Droit',
+    facultyAr: 'كلية الحقوق سعيد حمدين',
+    category: 'law',
+  },
+  {
+    code: 'POL',
+    nameAr: 'العلوم السياسية والعلاقات الدولية (Sciences Politiques)',
+    nameFr: 'Sciences Politiques',
+    facultyAr: 'كلية العلوم السياسية',
+    category: 'law',
+  },
+  {
+    code: 'ST',
+    nameAr: 'علوم وتكنولوجيا (Sciences et Technologies - ST)',
+    nameFr: 'Sciences et Technologies',
+    facultyAr: 'كلية التكنولوجيا والعلوم التطبيقية',
+    category: 'technology',
+  },
+  {
+    code: 'ELEC',
+    nameAr: 'الهندسة الكهربائية والإلكترونيك (Génie Électrique)',
+    nameFr: 'Génie Électrique',
+    facultyAr: 'كلية الإلكترونيك وهندسة النظم',
+    category: 'technology',
+  },
+  {
+    code: 'CIVIL',
+    nameAr: 'الهندسة المدنية والري (Génie Civil & Hydraulique)',
+    nameFr: 'Génie Civil',
+    facultyAr: 'كلية الهندسة المدنية',
+    category: 'technology',
+  },
+  {
+    code: 'ARCH',
+    nameAr: 'الهندسة المعمارية والعمران (Architecture & Urbanisme)',
+    nameFr: 'Architecture',
+    facultyAr: 'معهد الهندسة المعمارية والتعمير',
+    category: 'technology',
+  },
+  {
+    code: 'SNV',
+    nameAr: 'علوم الطبيعة والحياة والبيولوجيا (Sciences de la Nature et de la Vie - SNV)',
+    nameFr: 'Sciences de la Nature & SNV',
+    facultyAr: 'كلية علوم الطبيعة والحياة',
+    category: 'sciences',
+  },
+  {
+    code: 'MATH',
+    nameAr: 'الرياضيات وتطبيقاتها (Mathématiques)',
+    nameFr: 'Mathématiques',
+    facultyAr: 'كلية الرياضيات',
+    category: 'sciences',
+  },
+  {
+    code: 'SM',
+    nameAr: 'علوم المادة - فيزياء وكيمياء (Sciences de la Matière - SM)',
+    nameFr: 'Physique & Chimie',
+    facultyAr: 'كلية الفيزياء والكيمياء',
+    category: 'sciences',
+  },
+  {
+    code: 'LIT_AR',
+    nameAr: 'اللغة والأدب العربي والدراسات اللغوية (Littérature Arabe)',
+    nameFr: 'Langue & Littérature Arabes',
+    facultyAr: 'كلية الآداب واللغات',
+    category: 'humanities',
+  },
+  {
+    code: 'LANG_FR',
+    nameAr: 'اللغة الفرنسية وآدابها (Langue Française)',
+    nameFr: 'Langue Française',
+    facultyAr: 'كلية اللغات الأجنبية',
+    category: 'humanities',
+  },
+  {
+    code: 'LANG_EN',
+    nameAr: 'اللغة الإنجليزية والترجمة (Langue Anglaise & Traduction)',
+    nameFr: 'Langue Anglaise & Traduction',
+    facultyAr: 'كلية اللغات والترجمة',
+    category: 'humanities',
+  },
+  {
+    code: 'SOC',
+    nameAr: 'علم الاجتماع والأنثروبولوجيا (Sociologie)',
+    nameFr: 'Sociologie',
+    facultyAr: 'كلية العلوم الاجتماعية والإنسانية',
+    category: 'humanities',
+  },
+  {
+    code: 'HIST',
+    nameAr: 'التاريخ الوطني وعلم الآثار (Histoire & Archéologie)',
+    nameFr: 'Histoire',
+    facultyAr: 'كلية التاريخ والآثار بوزريعة',
+    category: 'humanities',
+  },
+  {
+    code: 'MEDIA',
+    nameAr: 'علوم الإعلام والاتصال والصحافة (Sciences de l\'Information & Communication)',
+    nameFr: 'Information & Communication',
+    facultyAr: 'كلية علوم الإعلام والاتصال بن عكنون',
+    category: 'humanities',
+  },
+  {
+    code: 'ISLAM',
+    nameAr: 'العلوم الإسلامية وأصول الدين (Sciences Islamiques)',
+    nameFr: 'Sciences Islamiques',
+    facultyAr: 'كلية العلوم الإسلامية خروبة',
+    category: 'humanities',
+  },
+  {
+    code: 'AGRO',
+    nameAr: 'العلوم الفلاحية والبيطرية والبيوتكنولوجيا (Sciences Agronomiques)',
+    nameFr: 'Sciences Agronomiques',
+    facultyAr: 'المدرسة الوطنية العليا للفلاحة الحراش',
+    category: 'sciences',
+  },
+];

@@ -20,7 +20,7 @@ import {
   Sparkles,
   ArrowRight,
   Printer,
-  School,
+  GraduationCap,
 } from 'lucide-react';
 
 interface RecordsViewProps {
@@ -160,7 +160,7 @@ export const RecordsView: React.FC<RecordsViewProps> = ({
       {classes.length === 0 ? (
         <div className="bg-white dark:bg-[#17241C] rounded-2xl p-8 sm:p-12 text-center border border-dashed border-slate-300 dark:border-slate-700 max-w-xl mx-auto my-6">
           <div className="w-16 h-16 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-[#006233] dark:text-emerald-400 mx-auto flex items-center justify-center mb-4">
-            <School className="w-8 h-8" />
+            <GraduationCap className="w-8 h-8" />
           </div>
           <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
             {t.emptyRecordsTitle}
@@ -410,9 +410,13 @@ export const RecordsView: React.FC<RecordsViewProps> = ({
                           {item.className}
                         </h4>
                         <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                          {item.schoolName && <span>{item.schoolName}</span>}
-                          {item.schoolName && item.teacherName && <span>•</span>}
-                          {item.teacherName && <span>{item.teacherName}</span>}
+                          <span>{item.schoolName || 'جامعة الجزائر'}</span>
+                          {item.teacherName && (
+                            <>
+                              <span>•</span>
+                              <span>{item.teacherName}</span>
+                            </>
+                          )}
                         </div>
                       </div>
 

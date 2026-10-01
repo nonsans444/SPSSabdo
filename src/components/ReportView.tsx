@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { ClassRecord, Language } from '../types';
 import { translations } from '../i18n/translations';
-import { computeOverallStats, getLevelColorClass } from '../utils/calculator';
+import { computeOverallStats } from '../utils/calculator';
 import { AlgerianCrescentStar } from './AlgerianEmblem';
-import { Printer, ArrowLeft, ArrowRight, School, User, Calendar, CheckCircle, FileText } from 'lucide-react';
+import { Printer, ArrowLeft, ArrowRight, FileText } from 'lucide-react';
 
 interface ReportViewProps {
   classes: ClassRecord[];
@@ -16,8 +16,8 @@ interface ReportViewProps {
 
 export const ReportView: React.FC<ReportViewProps> = ({
   classes,
-  teacherName = '',
-  schoolName = '',
+  teacherName,
+  schoolName,
   lang,
   onBack,
   isDark,
@@ -26,25 +26,26 @@ export const ReportView: React.FC<ReportViewProps> = ({
   const stats = computeOverallStats(classes);
 
   const [wilaya, setWilaya] = useState('الجزائر');
-  const [academicYear, setAcademicYear] = useState('2025 / 2026');
   const [customObservations, setCustomObservations] = useState('');
+
+  const currentDate = new Intl.DateTimeFormat(
+    lang === 'ar' ? 'ar-DZ' : lang === 'fr' ? 'fr-DZ' : 'en-US',
+    {
+      dateStyle: 'full',
+    }
+  ).format(new Date());
 
   const handlePrint = () => {
     window.print();
   };
 
-  const currentDate = new Intl.DateTimeFormat(
-    lang === 'ar' ? 'ar-DZ' : lang === 'fr' ? 'fr-DZ' : 'en-US',
-    { dateStyle: 'full' }
-  ).format(new Date());
-
   return (
-    <div className="max-w-5xl mx-auto px-4 py-6">
-      {/* Top Action Bar (Hidden when printing) */}
-      <div className="no-print flex items-center justify-between gap-4 mb-6 bg-white dark:bg-[#17241C] p-4 rounded-2xl shadow-sm border border-slate-200/80 dark:border-slate-800">
+    <div className="max-w-4xl mx-auto px-4 py-6">
+      {/* Top Action Bar (hidden in print) */}
+      <div className="no-print flex items-center justify-between pb-4 mb-4 border-b border-slate-200 dark:border-slate-800">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors min-h-[44px]"
+          className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
         >
           {lang === 'ar' ? <ArrowRight className="w-4 h-4" /> : <ArrowLeft className="w-4 h-4" />}
           <span>{lang === 'ar' ? 'العودة للسجلات' : lang === 'fr' ? 'Retour aux registres' : 'Back to Records'}</span>
@@ -77,11 +78,12 @@ export const ReportView: React.FC<ReportViewProps> = ({
 
           <div className="flex flex-wrap items-center justify-between text-xs text-slate-700 mt-4 px-2">
             <div className="flex items-center gap-1.5 font-medium">
-              <span>{t.directorateTitle}:</span>
+              <span>{t.directorateTitle}</span>
               <input
                 type="text"
                 value={wilaya}
                 onChange={(e) => setWilaya(e.target.value)}
+                placeholder="مثال: جامعة الجزائر 1"
                 className="no-print bg-slate-50 border border-slate-300 rounded px-1.5 py-0.5 text-xs font-semibold focus:outline-hidden"
               />
               <span className="hidden print:inline font-bold underline">{wilaya}</span>
@@ -97,11 +99,23 @@ export const ReportView: React.FC<ReportViewProps> = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 py-4 text-xs border-b border-slate-200 text-slate-800">
           <div>
             <span className="font-bold text-slate-900">{t.schoolName}:</span>{' '}
-            <span className="font-semibold">{schoolName || 'متوسطة الإخوة بوعزيز'}</span>
+            {schoolName && schoolName.trim() ? (
+              <span className="font-semibold">{schoolName}</span>
+            ) : (
+              <span className="text-slate-400 italic font-normal tracking-wide blur-[0.35px] select-none">
+                جامعة الجزائر (مثال)
+              </span>
+            )}
           </div>
           <div className="text-start sm:text-end">
             <span className="font-bold text-slate-900">{t.teacherName}:</span>{' '}
-            <span className="font-semibold">{teacherName || 'أ. عبد القادر بن عيسى'}</span>
+            {teacherName && teacherName.trim() ? (
+              <span className="font-semibold">{teacherName}</span>
+            ) : (
+              <span className="text-slate-400 italic font-normal tracking-wide blur-[0.35px] select-none">
+                {lang === 'ar' ? 'الأستاذ(ة) المشرف(ة) (مثال)' : 'Enseignant Référent (Exemple)'}
+              </span>
+            )}
           </div>
           <div>
             <span className="font-bold text-slate-900">{t.dateLabel}</span>{' '}
@@ -119,11 +133,11 @@ export const ReportView: React.FC<ReportViewProps> = ({
             {t.pedagogicalReportHeading}
           </div>
           <p className="text-xs text-slate-500 mt-1">
-            SPSS - Students' Passion for reading Statistics System
+            SPSS - Higher Education Academic Reading Statistics System
           </p>
         </div>
 
-        {/* Table of Class Results */}
+        {/* Table of Major Results */}
         <div className="overflow-x-auto my-4">
           <table className="w-full text-xs text-start border-collapse border border-slate-300">
             <thead>
@@ -154,8 +168,8 @@ export const ReportView: React.FC<ReportViewProps> = ({
                     : t.levelLow;
 
                 return (
-                  <tr key={c.id} className={idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}>
-                    <td className="p-2 border border-slate-300 text-center tabular-nums font-semibold">
+                  <tr key={c.id} className="border-b border-slate-200 hover:bg-slate-50/50">
+                    <td className="p-2 border border-slate-300 text-center tabular-nums font-semibold text-slate-500">
                       {idx + 1}
                     </td>
                     <td className="p-2 border border-slate-300 font-bold text-slate-900">
@@ -164,19 +178,19 @@ export const ReportView: React.FC<ReportViewProps> = ({
                     <td className="p-2 border border-slate-300 text-center tabular-nums">
                       {c.totalStudents}
                     </td>
-                    <td className="p-2 border border-slate-300 text-center tabular-nums font-bold text-[#006233]">
+                    <td className="p-2 border border-slate-300 text-center tabular-nums font-semibold text-emerald-800">
                       {c.readersCount}
                     </td>
-                    <td className="p-2 border border-slate-300 text-center tabular-nums font-bold text-[#D21034]">
+                    <td className="p-2 border border-slate-300 text-center tabular-nums font-semibold text-rose-800">
                       {c.nonReadersCount}
                     </td>
                     <td className="p-2 border border-slate-300 text-center tabular-nums font-bold">
-                      {c.readerPercentage}%
+                      {c.readerPercentage.toFixed(1)}%
                     </td>
-                    <td className="p-2 border border-slate-300 text-center tabular-nums font-black">
-                      {c.grade.toFixed(1)} / 20
+                    <td className="p-2 border border-slate-300 text-center tabular-nums font-black text-slate-900">
+                      {c.grade.toFixed(1)}
                     </td>
-                    <td className="p-2 border border-slate-300 text-center font-semibold">
+                    <td className="p-2 border border-slate-300 text-center">
                       <span
                         className={`inline-block px-2 py-0.5 rounded text-[11px] font-bold ${
                           c.level === 'excellent'
@@ -199,7 +213,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
             <tfoot>
               <tr className="bg-slate-200/80 font-bold border-t-2 border-slate-400">
                 <td colSpan={2} className="p-2.5 border border-slate-300 text-start font-black">
-                  {lang === 'ar' ? 'المجموع والمعدل العام للمؤسسة' : 'Total et Moyenne Globale'}
+                  {lang === 'ar' ? 'المجموع والمعدل العام لكافة التخصصات' : 'Total et Moyenne Globale des Filières'}
                 </td>
                 <td className="p-2.5 border border-slate-300 text-center tabular-nums font-black">
                   {stats.totalStudents}
@@ -230,7 +244,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
           </table>
         </div>
 
-        {/* Pedagogical Observations & Recommendations */}
+        {/* Academic Observations & Recommendations */}
         <div className="my-6 p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2 text-xs">
           <h3 className="font-bold text-slate-900 flex items-center gap-1.5 text-sm">
             <FileText className="w-4 h-4 text-[#006233]" />
@@ -244,7 +258,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
               rows={2}
               value={customObservations}
               onChange={(e) => setCustomObservations(e.target.value)}
-              placeholder={lang === 'ar' ? 'أضف ملاحظات أو توصيات خاصة للأستاذ(ة) أو المفتش...' : 'Ajoutez des observations pédagogiques personnalisées...'}
+              placeholder={lang === 'ar' ? 'أضف ملاحظات أو توصيات خاصة للأستاذ(ة) المشرف أو المجلس العلمي...' : 'Ajoutez des observations académiques personnalisées...'}
               className="w-full p-2 text-xs border border-slate-300 rounded-lg bg-white"
             />
           </div>
