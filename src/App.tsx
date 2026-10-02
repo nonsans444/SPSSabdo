@@ -19,7 +19,7 @@ import { Header } from './components/Header';
 import { ClassForm } from './components/ClassForm';
 import { RecordsView } from './components/RecordsView';
 import { ReportView } from './components/ReportView';
-import { ZelligeBackground } from './components/AlgerianEmblem';
+import { AlgerianFlagBackground, ZelligeBackground } from './components/AlgerianEmblem';
 import { Calculator, BookOpen, FileText, CheckCircle2, AlertCircle } from 'lucide-react';
 
 export default function App() {
@@ -36,11 +36,9 @@ export default function App() {
     try {
       const saved = localStorage.getItem('spss_dark_mode');
       if (saved !== null) return saved === 'true';
-      return typeof window !== 'undefined' && typeof window.matchMedia === 'function'
-        ? window.matchMedia('(prefers-color-scheme: dark)').matches
-        : false;
+      return true; // Default dark theme as in user reference mockup
     } catch {
-      return false;
+      return true;
     }
   });
 
@@ -62,7 +60,7 @@ export default function App() {
     }
   }, [lang]);
 
-  // Sync dark mode
+  // Sync dark mode (forced dark as in screenshot design)
   useEffect(() => {
     if (isDark) {
       document.documentElement.classList.add('dark');
@@ -128,10 +126,10 @@ export default function App() {
     saveStoredClasses(SAMPLE_CLASSES);
     showToast(
       lang === 'ar'
-        ? 'تم تحميل البيانات التجريبية بنجاح!'
+        ? 'تم تحميل نماذج التخصصات الجامعية بنجاح!'
         : lang === 'fr'
-        ? 'Données de démonstration chargées !'
-        : 'Sample data loaded successfully!'
+        ? 'Filières universitaires chargées !'
+        : 'Sample university majors loaded successfully!'
     );
   };
 
@@ -186,12 +184,15 @@ export default function App() {
 
   return (
     <div
-      className={`min-h-screen flex flex-col font-sans transition-colors duration-200 ${
-        isDark ? 'dark bg-[#0F1713] text-[#FAF7F2]' : 'bg-[#FAF7F2] text-slate-900'
+      className={`min-h-screen flex flex-col font-sans transition-colors duration-200 relative ${
+        isDark ? 'dark bg-[#05170F] text-[#FAF7F2]' : 'bg-[#05170F] text-[#FAF7F2]'
       }`}
     >
+      {/* Algerian Flag prominent background matching user screenshot */}
+      <AlgerianFlagBackground />
+
       {/* Algerian Islamic Zellige background pattern */}
-      <ZelligeBackground isDark={isDark} />
+      <ZelligeBackground isDark={true} />
 
       {/* Top Application Header */}
       <Header
@@ -205,7 +206,7 @@ export default function App() {
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 relative z-10 pb-20 sm:pb-8">
+      <main className="flex-1 relative z-10 pb-24 sm:pb-10">
         {activeTab === 'calculator' && (
           <ClassForm
             onSaveClass={handleSaveClass}
@@ -244,33 +245,35 @@ export default function App() {
         )}
       </main>
 
-      {/* Mobile Bottom Thumb Bar (under 15% sticky height, high touch hitboxes) */}
-      <div className="no-print sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#121C16]/95 backdrop-blur-md border-t border-slate-200/80 dark:border-emerald-950/60 shadow-lg">
-        <div className="grid grid-cols-3 h-15 items-center px-2">
+      {/* Mobile Bottom Thumb Bar matching user screenshot */}
+      <div className="no-print sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#061C12]/95 backdrop-blur-xl border-t border-emerald-900/60 shadow-2xl">
+        <div className="grid grid-cols-3 h-16 items-center px-2">
+          {/* Tab 1: حاسبة التخصص */}
           <button
             onClick={() => setActiveTab('calculator')}
             className={`flex flex-col items-center justify-center py-1 rounded-xl transition-colors min-h-[48px] ${
               activeTab === 'calculator'
-                ? 'text-[#006233] dark:text-emerald-400 font-bold'
-                : 'text-slate-500 dark:text-slate-400'
+                ? 'text-[#6CE89F] font-black'
+                : 'text-emerald-300/60 hover:text-emerald-100'
             }`}
           >
-            <Calculator className="w-5 h-5 mb-0.5" />
+            <Calculator className={`w-5 h-5 mb-0.5 ${activeTab === 'calculator' ? 'text-[#6CE89F]' : 'text-emerald-400/60'}`} />
             <span className="text-[10px]">{t.navCalculator}</span>
           </button>
 
+          {/* Tab 2: سجل التخصصات الجامعية */}
           <button
             onClick={() => setActiveTab('records')}
             className={`flex flex-col items-center justify-center py-1 rounded-xl transition-colors min-h-[48px] relative ${
               activeTab === 'records'
-                ? 'text-[#006233] dark:text-emerald-400 font-bold'
-                : 'text-slate-500 dark:text-slate-400'
+                ? 'text-[#6CE89F] font-black'
+                : 'text-emerald-300/60 hover:text-emerald-100'
             }`}
           >
             <div className="relative">
-              <BookOpen className="w-5 h-5 mb-0.5" />
+              <BookOpen className={`w-5 h-5 mb-0.5 ${activeTab === 'records' ? 'text-[#6CE89F]' : 'text-emerald-400/60'}`} />
               {classes.length > 0 && (
-                <span className="absolute -top-1 -end-2 w-4 h-4 bg-[#006233] text-white rounded-full text-[9px] font-bold flex items-center justify-center">
+                <span className="absolute -top-1.5 -end-2.5 min-w-[18px] h-[18px] px-1 bg-[#00A859] text-white rounded-full text-[9px] font-black flex items-center justify-center shadow-md border border-[#061C12]">
                   {classes.length}
                 </span>
               )}
@@ -278,15 +281,16 @@ export default function App() {
             <span className="text-[10px]">{t.navRecords}</span>
           </button>
 
+          {/* Tab 3: التقرير الأكاديمي (طباعة) */}
           <button
             onClick={() => setActiveTab('report')}
             className={`flex flex-col items-center justify-center py-1 rounded-xl transition-colors min-h-[48px] ${
               activeTab === 'report'
-                ? 'text-[#006233] dark:text-emerald-400 font-bold'
-                : 'text-slate-500 dark:text-slate-400'
+                ? 'text-[#6CE89F] font-black'
+                : 'text-emerald-300/60 hover:text-emerald-100'
             }`}
           >
-            <FileText className="w-5 h-5 mb-0.5" />
+            <FileText className={`w-5 h-5 mb-0.5 ${activeTab === 'report' ? 'text-[#6CE89F]' : 'text-emerald-400/60'}`} />
             <span className="text-[10px]">{t.navReport}</span>
           </button>
         </div>
@@ -294,18 +298,18 @@ export default function App() {
 
       {/* Floating Toast Notification */}
       {toast && (
-        <div className="fixed bottom-18 sm:bottom-6 start-1/2 -translate-x-1/2 z-50 animate-slideUp">
+        <div className="fixed bottom-20 sm:bottom-6 start-1/2 -translate-x-1/2 z-50 animate-slideUp">
           <div
-            className={`flex items-center gap-2.5 px-4 py-2.5 rounded-xl shadow-xl text-xs sm:text-sm font-semibold border ${
+            className={`flex items-center gap-2.5 px-4 py-2.5 rounded-xl shadow-2xl text-xs sm:text-sm font-semibold border ${
               toast.type === 'success'
-                ? 'bg-[#006233] text-white border-emerald-600'
-                : 'bg-rose-600 text-white border-rose-500'
+                ? 'bg-[#008844] text-white border-emerald-400/50 shadow-emerald-950/60'
+                : 'bg-rose-700 text-white border-rose-500 shadow-rose-950/60'
             }`}
           >
             {toast.type === 'success' ? (
-              <CheckCircle2 className="w-4 h-4 shrink-0" />
+              <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-200" />
             ) : (
-              <AlertCircle className="w-4 h-4 shrink-0" />
+              <AlertCircle className="w-4 h-4 shrink-0 text-rose-200" />
             )}
             <span>{toast.message}</span>
           </div>

@@ -4,7 +4,7 @@ import { translations } from '../i18n/translations';
 import { calculateLiveStats } from '../utils/calculator';
 import { ALGERIAN_UNIVERSITY_SPECIALTIES, UniversitySpecialty } from '../utils/specialties';
 import { DonutChart, GradeDisplay, HorizontalBar } from './Charts';
-import { Save, RotateCcw, AlertCircle, Sparkles, Building2, User, GraduationCap, BookOpen } from 'lucide-react';
+import { Save, RotateCcw, AlertCircle, Sparkles, Building2, User, GraduationCap, ChevronDown } from 'lucide-react';
 
 interface ClassFormProps {
   onSaveClass: (record: Omit<ClassRecord, 'id' | 'createdAt'>) => void;
@@ -50,7 +50,7 @@ export const ClassForm: React.FC<ClassFormProps> = ({
   const [nonReadersCount, setNonReadersCount] = useState<string>('');
   const [notes, setNotes] = useState<string>('');
 
-  // Update default specialty name when language switches if user hasn't typed custom
+  // Update default specialty name when language switches
   useEffect(() => {
     const found = ALGERIAN_UNIVERSITY_SPECIALTIES.find((s) => s.code === selectedSpecialtyCode);
     if (found) {
@@ -133,81 +133,80 @@ export const ClassForm: React.FC<ClassFormProps> = ({
   return (
     <div className="max-w-6xl mx-auto px-4 py-6">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Left Column: Input Form (lg:col-span-7) */}
-        <div className="lg:col-span-7 bg-white dark:bg-[#17241C] rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200/80 dark:border-emerald-900/40">
+        {/* Main University Form Card (Matched to user screenshot) */}
+        <div className="lg:col-span-7 bg-[#0A2218]/92 backdrop-blur-xl rounded-3xl p-5 sm:p-7 shadow-2xl border border-emerald-700/50">
           {/* Section Header */}
-          <div className="mb-5 pb-4 border-b border-slate-100 dark:border-slate-800">
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <GraduationCap className="w-5 h-5 text-[#006233] dark:text-emerald-400" />
-              {t.teacherFormTitle}
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
-              {t.teacherFormSubtitle}
-            </p>
+          <div className="mb-6 pb-4 border-b border-emerald-900/60 flex items-start gap-3">
+            <div className="w-11 h-11 rounded-2xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center shrink-0 shadow-inner">
+              <GraduationCap className="w-6 h-6 text-[#6CE89F]" />
+            </div>
+            <div>
+              <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight flex items-center gap-2">
+                {t.teacherFormTitle}
+              </h2>
+              <p className="text-xs sm:text-sm text-emerald-200/80 mt-1 leading-relaxed">
+                {t.teacherFormSubtitle}
+              </p>
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* University & Professor fields */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {/* Institution / University */}
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1 flex items-center justify-between">
-                  <span className="flex items-center gap-1.5">
-                    <Building2 className="w-3.5 h-3.5 text-slate-400" />
-                    {t.schoolName}
-                  </span>
-                  <span className="text-[11px] font-normal text-slate-400">({t.optional})</span>
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={schoolName}
-                    onChange={(e) => setSchoolName(e.target.value)}
-                    placeholder={t.schoolNamePlaceholder}
-                    className="w-full px-3.5 py-2.5 rounded-xl text-sm border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-[#006233] focus:border-transparent transition-all min-h-[44px]"
-                  />
-                </div>
-                {/* Blurry ghost preview indicator so user never has to delete anything */}
-                <div className="mt-1 flex items-center gap-1 text-[11px] text-slate-500 dark:text-slate-400">
-                  <span className="text-slate-400 dark:text-slate-500">مثال افتراضي:</span>
-                  <span className="font-semibold text-slate-600 dark:text-slate-400 blur-[0.4px] select-none hover:blur-none transition-all">
-                    جامعة الجزائر
-                  </span>
-                  <span className="text-[10px] text-slate-600 dark:text-slate-400">(اكتب جامعتك مباشرة دون مسح)</span>
-                </div>
-              </div>
-
-              {/* Professor / Academic Supervisor */}
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1 flex items-center justify-between">
-                  <span className="flex items-center gap-1.5">
-                    <User className="w-3.5 h-3.5 text-slate-400" />
-                    {t.teacherName}
-                  </span>
-                  <span className="text-[11px] font-normal text-slate-400">({t.optional})</span>
-                </label>
+            {/* Field 1: الجامعة / المركز الجامعي */}
+            <div>
+              <label className="block text-xs font-bold text-emerald-100 mb-1.5 flex items-center justify-between">
+                <span className="flex items-center gap-1.5">
+                  <Building2 className="w-4 h-4 text-[#6CE89F]" />
+                  {t.schoolName}
+                </span>
+                <span className="text-[11px] font-normal text-emerald-300/70">({t.optional})</span>
+              </label>
+              <div className="relative">
                 <input
                   type="text"
-                  value={teacherName}
-                  onChange={(e) => setTeacherName(e.target.value)}
-                  placeholder={t.teacherNamePlaceholder}
-                  className="w-full px-3.5 py-2.5 rounded-xl text-sm border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-[#006233] focus:border-transparent transition-all min-h-[44px]"
+                  value={schoolName}
+                  onChange={(e) => setSchoolName(e.target.value)}
+                  placeholder={t.schoolNamePlaceholder}
+                  className="w-full px-4 py-3 rounded-xl text-sm font-medium text-center border border-emerald-600/50 bg-[#0E2C1E]/90 text-white placeholder:text-slate-400/60 focus:outline-hidden focus:ring-2 focus:ring-[#6CE89F] focus:border-transparent transition-all min-h-[46px] shadow-inner"
                 />
+              </div>
+              {/* Blurry ghost preview indicator as in screenshot */}
+              <div className="mt-1.5 text-center text-xs text-emerald-300/80">
+                <span className="text-emerald-400/70">مثال افتراضي: </span>
+                <span className="font-semibold text-slate-300 blur-[0.4px] select-none hover:blur-none transition-all">
+                  جامعة الجزائر
+                </span>
+                <span className="text-[11px] text-emerald-400/60"> (اكتب جامعتك مباشرة دون مسح)</span>
               </div>
             </div>
 
-            {/* University Specialization Section (replaces old middle-school classes) */}
-            <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5 flex items-center justify-between">
+            {/* Field 2: الأستاذ(ة) المشرف / المحاضر */}
+            <div>
+              <label className="block text-xs font-bold text-emerald-100 mb-1.5 flex items-center justify-between">
                 <span className="flex items-center gap-1.5">
-                  <BookOpen className="w-3.5 h-3.5 text-[#006233] dark:text-emerald-400" />
+                  <User className="w-4 h-4 text-[#6CE89F]" />
+                  {t.teacherName}
+                </span>
+                <span className="text-[11px] font-normal text-emerald-300/70">({t.optional})</span>
+              </label>
+              <input
+                type="text"
+                value={teacherName}
+                onChange={(e) => setTeacherName(e.target.value)}
+                placeholder={t.teacherNamePlaceholder}
+                className="w-full px-4 py-3 rounded-xl text-sm font-medium text-center border border-emerald-600/50 bg-[#0E2C1E]/90 text-white placeholder:text-slate-400/60 focus:outline-hidden focus:ring-2 focus:ring-[#6CE89F] focus:border-transparent transition-all min-h-[46px] shadow-inner"
+              />
+            </div>
+
+            {/* Field 3: Specialty Select Dropdown */}
+            <div>
+              <label className="block text-xs font-bold text-emerald-100 mb-1.5 flex items-center justify-between">
+                <span className="flex items-center gap-1.5">
+                  <GraduationCap className="w-4 h-4 text-[#6CE89F]" />
                   {t.className}
                 </span>
-                <span className="text-rose-500 font-bold">*</span>
+                <span className="text-rose-400 font-bold">*</span>
               </label>
-
-              {/* Algerian University Specialization Select Dropdown */}
-              <div className="space-y-2">
+              <div className="relative">
                 <select
                   value={selectedSpecialtyCode}
                   onChange={(e) => {
@@ -218,85 +217,130 @@ export const ClassForm: React.FC<ClassFormProps> = ({
                       setClassName(lang === 'ar' ? found.nameAr : found.nameFr);
                     }
                   }}
-                  className="w-full px-3.5 py-2.5 rounded-xl text-sm font-semibold border border-emerald-300 dark:border-emerald-800/70 bg-emerald-50/50 dark:bg-emerald-950/20 text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-[#006233] transition-all min-h-[44px]"
+                  className="w-full appearance-none px-4 py-3 rounded-xl text-sm font-bold text-center border border-emerald-600/50 bg-[#0E2C1E]/90 text-white focus:outline-hidden focus:ring-2 focus:ring-[#6CE89F] transition-all min-h-[46px] shadow-inner cursor-pointer"
                 >
                   <optgroup label="تخصصات العلوم والتكنولوجيا (Sciences & Technologies)">
                     {ALGERIAN_UNIVERSITY_SPECIALTIES.filter(
                       (s) => s.category === 'sciences' || s.category === 'technology'
                     ).map((s) => (
-                      <option key={s.code} value={s.code}>
+                      <option key={s.code} value={s.code} className="bg-[#0A2218] text-white py-1">
                         {lang === 'ar' ? s.nameAr : s.nameFr}
                       </option>
                     ))}
                   </optgroup>
                   <optgroup label="العلوم الطبية والصيدلة (Sciences Médicales)">
                     {ALGERIAN_UNIVERSITY_SPECIALTIES.filter((s) => s.category === 'medical').map((s) => (
-                      <option key={s.code} value={s.code}>
+                      <option key={s.code} value={s.code} className="bg-[#0A2218] text-white py-1">
                         {lang === 'ar' ? s.nameAr : s.nameFr}
                       </option>
                     ))}
                   </optgroup>
                   <optgroup label="العلوم الاقتصادية والتسيير (Sciences Économiques & Gestion)">
                     {ALGERIAN_UNIVERSITY_SPECIALTIES.filter((s) => s.category === 'economics').map((s) => (
-                      <option key={s.code} value={s.code}>
+                      <option key={s.code} value={s.code} className="bg-[#0A2218] text-white py-1">
                         {lang === 'ar' ? s.nameAr : s.nameFr}
                       </option>
                     ))}
                   </optgroup>
                   <optgroup label="الحقوق والعلوم السياسية (Droit & Sciences Politiques)">
                     {ALGERIAN_UNIVERSITY_SPECIALTIES.filter((s) => s.category === 'law').map((s) => (
-                      <option key={s.code} value={s.code}>
+                      <option key={s.code} value={s.code} className="bg-[#0A2218] text-white py-1">
                         {lang === 'ar' ? s.nameAr : s.nameFr}
                       </option>
                     ))}
                   </optgroup>
                   <optgroup label="الآداب واللغات والعلوم الإنسانية (Lettres, Langues & SHS)">
                     {ALGERIAN_UNIVERSITY_SPECIALTIES.filter((s) => s.category === 'humanities').map((s) => (
-                      <option key={s.code} value={s.code}>
+                      <option key={s.code} value={s.code} className="bg-[#0A2218] text-white py-1">
                         {lang === 'ar' ? s.nameAr : s.nameFr}
                       </option>
                     ))}
                   </optgroup>
-                  <option value="CUSTOM">تخصص جامعي آخر (إدخال يدوي)...</option>
+                  <option value="CUSTOM" className="bg-[#0A2218] text-amber-300 py-1">
+                    تخصص جامعي آخر (إدخال يدوي)...
+                  </option>
                 </select>
-
-                {/* Direct fine-tuning or custom major input */}
-                <input
-                  type="text"
-                  value={className}
-                  onChange={(e) => {
-                    setClassName(e.target.value);
-                    setSelectedSpecialtyCode('CUSTOM');
-                  }}
-                  placeholder={t.classNamePlaceholder}
-                  required
-                  className="w-full px-3.5 py-2.5 rounded-xl text-sm border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-[#006233] transition-all min-h-[44px]"
-                />
-
-                {/* Quick Selection Tags of Popular Algerian University Specialties */}
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  {ALGERIAN_UNIVERSITY_SPECIALTIES.slice(0, 6).map((spec) => (
-                    <button
-                      key={spec.code}
-                      type="button"
-                      onClick={() => handleSpecialtySelect(spec)}
-                      className={`text-[11px] px-2.5 py-1 rounded-lg border transition-all ${
-                        selectedSpecialtyCode === spec.code
-                          ? 'bg-[#006233] text-white border-[#006233]'
-                          : 'bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/40'
-                      }`}
-                    >
-                      {lang === 'ar' ? spec.nameAr.split('(')[0].trim() : spec.nameFr}
-                    </button>
-                  ))}
+                <div className="absolute start-3 top-3.5 pointer-events-none text-emerald-400">
+                  <ChevronDown className="w-4 h-4" />
                 </div>
               </div>
             </div>
 
+            {/* Field 4: Custom / active specialty input */}
+            <div>
+              <input
+                type="text"
+                value={className}
+                onChange={(e) => {
+                  setClassName(e.target.value);
+                  setSelectedSpecialtyCode('CUSTOM');
+                }}
+                placeholder={t.classNamePlaceholder}
+                required
+                className="w-full px-4 py-3 rounded-xl text-sm font-bold text-center border border-emerald-600/50 bg-[#0E2C1E]/90 text-white focus:outline-hidden focus:ring-2 focus:ring-[#6CE89F] transition-all min-h-[46px] shadow-inner"
+              />
+            </div>
+
+            {/* Quick Selection Buttons Row (Exactly matching user screenshot) */}
+            <div className="space-y-2 pt-1">
+              {/* Row 1: Large button pills with golden/emerald border */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const aiSpec = ALGERIAN_UNIVERSITY_SPECIALTIES.find((s) => s.code === 'AI') || ALGERIAN_UNIVERSITY_SPECIALTIES[1];
+                    handleSpecialtySelect(aiSpec);
+                  }}
+                  className={`px-3 py-2.5 rounded-xl border text-xs sm:text-sm font-bold transition-all text-center ${
+                    selectedSpecialtyCode === 'AI' || selectedSpecialtyCode === 'INFO'
+                      ? 'border-[#C89D34] bg-[#0E2C1D] text-amber-200 shadow-md'
+                      : 'border-emerald-700/60 bg-[#0E281C]/70 text-emerald-100 hover:border-[#C89D34]'
+                  }`}
+                >
+                  الإعلام الآلي والذكاء الاصطناعي وعلوم البيانات
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const medSpec = ALGERIAN_UNIVERSITY_SPECIALTIES.find((s) => s.code === 'MED') || ALGERIAN_UNIVERSITY_SPECIALTIES[2];
+                    handleSpecialtySelect(medSpec);
+                  }}
+                  className={`px-3 py-2.5 rounded-xl border text-xs sm:text-sm font-bold transition-all text-center ${
+                    selectedSpecialtyCode === 'MED'
+                      ? 'border-[#C89D34] bg-[#0E2C1D] text-amber-200 shadow-md'
+                      : 'border-emerald-700/60 bg-[#0E281C]/70 text-emerald-100 hover:border-[#C89D34]'
+                  }`}
+                >
+                  الطب البشري
+                </button>
+              </div>
+
+              {/* Row 2: Smaller selection pills */}
+              <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
+                {ALGERIAN_UNIVERSITY_SPECIALTIES.slice(0, 5).map((spec) => {
+                  const isSelected = selectedSpecialtyCode === spec.code;
+                  return (
+                    <button
+                      key={spec.code}
+                      type="button"
+                      onClick={() => handleSpecialtySelect(spec)}
+                      className={`text-xs px-3.5 py-1.5 rounded-lg transition-all font-semibold ${
+                        isSelected
+                          ? 'bg-[#00A859] text-white shadow-md font-bold'
+                          : 'bg-[#0E281C] text-emerald-200 border border-emerald-800/80 hover:bg-[#123626]'
+                      }`}
+                    >
+                      {lang === 'ar' ? spec.nameAr.split('(')[0].trim() : spec.nameFr}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
             {/* Total Students */}
-            <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                {t.totalStudents} <span className="text-rose-500">*</span>
+            <div className="pt-3 border-t border-emerald-900/60">
+              <label className="block text-xs font-bold text-emerald-100 mb-1.5">
+                {t.totalStudents} <span className="text-rose-400">*</span>
               </label>
               <div className="flex items-center gap-2">
                 <div className="relative flex-1">
@@ -310,14 +354,14 @@ export const ClassForm: React.FC<ClassFormProps> = ({
                     value={totalStudents}
                     onChange={(e) => handleTotalChange(e.target.value)}
                     placeholder={t.totalStudentsPlaceholder}
-                    className="w-full px-3.5 py-2.5 rounded-xl text-base font-bold tabular-nums border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-[#006233] focus:border-transparent transition-all min-h-[46px]"
+                    className="w-full px-4 py-2.5 rounded-xl text-base font-black text-center tabular-nums border border-emerald-600/50 bg-[#0E2C1E]/90 text-white focus:outline-hidden focus:ring-2 focus:ring-[#6CE89F] transition-all min-h-[46px]"
                   />
                 </div>
                 <div className="flex items-center gap-1 shrink-0">
                   <button
                     type="button"
                     onClick={() => handleStepTotal(-1)}
-                    className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold flex items-center justify-center transition-colors min-h-[44px] min-w-[44px]"
+                    className="w-10 h-10 rounded-xl bg-[#0E2C1E] border border-emerald-700/60 hover:bg-[#153B29] text-emerald-200 font-bold flex items-center justify-center transition-colors min-h-[44px] min-w-[44px]"
                     title="-1"
                   >
                     -
@@ -325,7 +369,7 @@ export const ClassForm: React.FC<ClassFormProps> = ({
                   <button
                     type="button"
                     onClick={() => handleStepTotal(1)}
-                    className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold flex items-center justify-center transition-colors min-h-[44px] min-w-[44px]"
+                    className="w-10 h-10 rounded-xl bg-[#0E2C1E] border border-emerald-700/60 hover:bg-[#153B29] text-emerald-200 font-bold flex items-center justify-center transition-colors min-h-[44px] min-w-[44px]"
                     title="+1"
                   >
                     +
@@ -338,9 +382,9 @@ export const ClassForm: React.FC<ClassFormProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
               {/* Readers */}
               <div>
-                <label className="block text-xs font-semibold text-emerald-800 dark:text-emerald-400 mb-1 flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#006233]" />
-                  {t.readersCount} <span className="text-rose-500">*</span>
+                <label className="block text-xs font-bold text-[#6CE89F] mb-1.5 flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#00A859]" />
+                  {t.readersCount} <span className="text-rose-400">*</span>
                 </label>
                 <div className="flex items-center gap-2">
                   <input
@@ -352,13 +396,13 @@ export const ClassForm: React.FC<ClassFormProps> = ({
                     value={readersCount}
                     onChange={(e) => handleReadersChange(e.target.value)}
                     placeholder={t.readersCountPlaceholder}
-                    className="w-full px-3.5 py-2.5 rounded-xl text-base font-bold tabular-nums border border-emerald-300 dark:border-emerald-800 bg-emerald-50/30 dark:bg-emerald-950/20 text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-[#006233] focus:border-transparent transition-all min-h-[46px]"
+                    className="w-full px-3 py-2.5 rounded-xl text-base font-bold text-center tabular-nums border border-emerald-500/60 bg-[#0E2C1E]/90 text-white focus:outline-hidden focus:ring-2 focus:ring-[#6CE89F] transition-all min-h-[46px]"
                   />
                   <div className="flex items-center gap-1 shrink-0">
                     <button
                       type="button"
                       onClick={() => handleStepReaders(-1)}
-                      className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 text-emerald-800 dark:text-emerald-200 font-bold flex items-center justify-center transition-colors min-h-[44px] min-w-[44px]"
+                      className="w-10 h-10 rounded-xl bg-[#0E2C1E] border border-emerald-700/60 hover:bg-[#153B29] text-emerald-200 font-bold flex items-center justify-center transition-colors min-h-[44px] min-w-[44px]"
                       title="-1"
                     >
                       -
@@ -366,7 +410,7 @@ export const ClassForm: React.FC<ClassFormProps> = ({
                     <button
                       type="button"
                       onClick={() => handleStepReaders(1)}
-                      className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 text-emerald-800 dark:text-emerald-200 font-bold flex items-center justify-center transition-colors min-h-[44px] min-w-[44px]"
+                      className="w-10 h-10 rounded-xl bg-[#0E2C1E] border border-emerald-700/60 hover:bg-[#153B29] text-emerald-200 font-bold flex items-center justify-center transition-colors min-h-[44px] min-w-[44px]"
                       title="+1"
                     >
                       +
@@ -377,7 +421,7 @@ export const ClassForm: React.FC<ClassFormProps> = ({
 
               {/* Non-Readers */}
               <div>
-                <label className="block text-xs font-semibold text-rose-800 dark:text-rose-400 mb-1 flex items-center justify-between">
+                <label className="block text-xs font-bold text-rose-300 mb-1.5 flex items-center justify-between">
                   <span className="flex items-center gap-1.5">
                     <span className="w-2.5 h-2.5 rounded-full bg-[#D21034]" />
                     {t.nonReadersCount}
@@ -398,10 +442,10 @@ export const ClassForm: React.FC<ClassFormProps> = ({
                         ? `${t.autoCalculatedHint} (${Math.max(0, Number(totalStudents) - Number(readersCount))})`
                         : t.nonReadersCountPlaceholder
                     }
-                    className="w-full px-3.5 py-2.5 rounded-xl text-base font-bold tabular-nums border border-rose-200 dark:border-rose-900 bg-rose-50/30 dark:bg-rose-950/20 text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-[#D21034] focus:border-transparent transition-all min-h-[46px]"
+                    className="w-full px-3 py-2.5 rounded-xl text-base font-bold text-center tabular-nums border border-rose-800/60 bg-[#1F1215]/90 text-white focus:outline-hidden focus:ring-2 focus:ring-[#D21034] transition-all min-h-[46px]"
                   />
                   {nonReadersCount === '' && totalStudents && readersCount && (
-                    <span className="absolute end-3 top-3 text-[11px] text-slate-600 dark:text-slate-400 pointer-events-none italic">
+                    <span className="absolute end-3 top-3 text-[11px] text-rose-300/70 pointer-events-none italic">
                       = {Math.max(0, Number(totalStudents) - Number(readersCount))}
                     </span>
                   )}
@@ -412,47 +456,23 @@ export const ClassForm: React.FC<ClassFormProps> = ({
             {/* Error Message banner if invalid */}
             {!liveResult.isValid && liveResult.errorMessage && (
               <div
-                className="flex items-start gap-2.5 p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 text-rose-800 dark:text-rose-200 text-xs sm:text-sm animate-shake"
+                className="flex items-start gap-2.5 p-3.5 rounded-xl bg-rose-950/70 border border-rose-800 text-rose-200 text-xs sm:text-sm animate-shake shadow-lg"
                 role="alert"
               >
-                <AlertCircle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
+                <AlertCircle className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
                 <span className="font-medium leading-relaxed">{liveResult.errorMessage}</span>
               </div>
             )}
 
-            {/* Academic Observations / Notes */}
-            <div className="pt-1">
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                {lang === 'ar'
-                  ? 'ملاحظات وتوصيات أكاديمية (اختياري)'
-                  : lang === 'fr'
-                  ? 'Observations académiques (optionnel)'
-                  : 'Academic Notes (optional)'}
-              </label>
-              <textarea
-                rows={2}
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder={
-                  lang === 'ar'
-                    ? 'مثال: إقبال ممتاز على قواعد البيانات العلمية SNDL، الحاجة لدعم رصيد المكتبة بالمراجع الحديثة...'
-                    : lang === 'fr'
-                    ? 'Ex: Forte consultation des plateformes documentaires SNDL, intérêt pour les thèses...'
-                    : 'e.g., Active use of scientific journals, borrowing specialized monographs...'
-                }
-                className="w-full px-3.5 py-2.5 rounded-xl text-xs sm:text-sm border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-[#006233] focus:border-transparent transition-all resize-none"
-              />
-            </div>
-
             {/* Action Buttons */}
-            <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
+            <div className="pt-3 flex flex-col sm:flex-row items-center gap-3">
               <button
                 type="submit"
                 disabled={!liveResult.isValid}
-                className={`w-full sm:flex-1 h-12 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-md min-h-[48px] ${
+                className={`w-full sm:flex-1 h-12 rounded-xl font-black text-sm flex items-center justify-center gap-2 transition-all shadow-lg min-h-[48px] ${
                   liveResult.isValid
-                    ? 'bg-[#006233] hover:bg-[#00542c] text-white cursor-pointer active:scale-[0.99]'
-                    : 'bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-600 cursor-not-allowed shadow-none'
+                    ? 'bg-[#008844] hover:bg-[#00A859] text-white cursor-pointer active:scale-[0.99] border border-emerald-400/40'
+                    : 'bg-emerald-950/50 text-slate-500 cursor-not-allowed border border-emerald-950'
                 }`}
               >
                 <Save className="w-4 h-4" />
@@ -462,7 +482,7 @@ export const ClassForm: React.FC<ClassFormProps> = ({
               <button
                 type="button"
                 onClick={handleReset}
-                className="w-full sm:w-auto px-4 h-12 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-colors min-h-[48px]"
+                className="w-full sm:w-auto px-4 h-12 rounded-xl border border-emerald-700/60 bg-[#0E281C] hover:bg-[#123626] text-emerald-200 font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-colors min-h-[48px]"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span>{t.resetBtn}</span>
@@ -471,18 +491,18 @@ export const ClassForm: React.FC<ClassFormProps> = ({
           </form>
         </div>
 
-        {/* Right Column: Live Statistics Visualizer (lg:col-span-5) */}
+        {/* Right Column: Live Statistics Visualizer */}
         <div className="lg:col-span-5 space-y-4">
-          <div className="bg-white dark:bg-[#17241C] rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200/80 dark:border-emerald-900/40">
+          <div className="bg-[#0A2218]/92 backdrop-blur-xl rounded-3xl p-5 sm:p-6 shadow-2xl border border-emerald-700/50">
             {/* Header */}
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+            <div className="flex items-center justify-between pb-3 border-b border-emerald-900/60">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-[#C59B27]" />
-                <h3 className="font-bold text-base text-slate-900 dark:text-white">
+                <Sparkles className="w-4 h-4 text-[#C89D34]" />
+                <h3 className="font-bold text-base text-white">
                   {t.liveStatsTitle}
                 </h3>
               </div>
-              <span className="text-[11px] px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-[#006233] dark:text-emerald-400 font-semibold">
+              <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-[#6CE89F] font-bold border border-emerald-500/30">
                 {liveResult.isValid ? t.systemReady : '...'}
               </span>
             </div>
@@ -502,7 +522,7 @@ export const ClassForm: React.FC<ClassFormProps> = ({
 
             {/* Horizontal Comparative Bar */}
             <div className="pt-2">
-              <span className="text-xs font-semibold text-slate-600 dark:text-slate-400 block mb-1">
+              <span className="text-xs font-semibold text-emerald-200/80 block mb-1">
                 {t.ratioComparison}
               </span>
               <HorizontalBar
@@ -519,7 +539,7 @@ export const ClassForm: React.FC<ClassFormProps> = ({
                 grade={liveResult.grade}
                 level={liveResult.level}
                 lang={lang}
-                isDark={isDark}
+                isDark={true}
               />
             </div>
           </div>

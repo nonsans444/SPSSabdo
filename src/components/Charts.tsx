@@ -69,14 +69,14 @@ export const DonutChart: React.FC<DonutChartProps> = ({
 
         {/* Center label */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-          <span className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white tabular-nums">
+          <span className="text-3xl font-bold tracking-tight text-white tabular-nums">
             {readerPct.toFixed(1)}%
           </span>
-          <span className="text-xs font-semibold text-emerald-800 dark:text-emerald-300 mt-0.5">
+          <span className="text-xs font-semibold text-[#6CE89F] mt-0.5">
             {t.readersLabel}
           </span>
           {total > 0 && (
-            <span className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+            <span className="text-[11px] text-emerald-200/70 mt-0.5">
               {readersCount} / {total}
             </span>
           )}
@@ -86,15 +86,15 @@ export const DonutChart: React.FC<DonutChartProps> = ({
       {/* Legend below donut */}
       <div className="flex items-center justify-center gap-6 mt-4 text-xs font-medium">
         <div className="flex items-center gap-2">
-          <span className="w-3.5 h-3.5 rounded-full bg-[#006233] shrink-0 shadow-xs" />
-          <span className="text-slate-700 dark:text-slate-300">
-            {t.readersLabel}: <strong className="text-slate-900 dark:text-white tabular-nums">{readerPct.toFixed(1)}%</strong>
+          <span className="w-3.5 h-3.5 rounded-full bg-[#00A859] shrink-0 shadow-xs" />
+          <span className="text-emerald-100">
+            {t.readersLabel}: <strong className="text-white tabular-nums">{readerPct.toFixed(1)}%</strong>
           </span>
         </div>
         <div className="flex items-center gap-2">
           <span className="w-3.5 h-3.5 rounded-full bg-[#D21034] shrink-0 shadow-xs" />
-          <span className="text-slate-700 dark:text-slate-300">
-            {t.nonReadersLabel}: <strong className="text-slate-900 dark:text-white tabular-nums">{nonReaderPercentage.toFixed(1)}%</strong>
+          <span className="text-emerald-100">
+            {t.nonReadersLabel}: <strong className="text-white tabular-nums">{nonReaderPercentage.toFixed(1)}%</strong>
           </span>
         </div>
       </div>
@@ -113,7 +113,7 @@ export const GradeDisplay: React.FC<GradeDisplayProps> = ({
   grade,
   level,
   lang = 'ar',
-  isDark = false,
+  isDark = true,
 }) => {
   const t = translations[lang];
   const colors = getLevelColorClass(level, isDark);
@@ -138,25 +138,25 @@ export const GradeDisplay: React.FC<GradeDisplayProps> = ({
 
   return (
     <div
-      className={`rounded-2xl p-5 border-2 ${colors.borderColor} ${colors.badgeBg} transition-all duration-300`}
+      className={`rounded-2xl p-5 border-2 ${colors.borderColor} ${colors.badgeBg} transition-all duration-300 shadow-lg`}
     >
       <div className="flex items-center justify-between gap-4">
         <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-1">
+          <span className="text-xs font-bold uppercase tracking-wider text-emerald-200/80 block mb-1">
             {t.gradeOutOf20}
           </span>
           <div className="flex items-baseline gap-1.5">
-            <span className="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white tabular-nums">
+            <span className="text-4xl md:text-5xl font-black text-white tabular-nums">
               {grade.toFixed(1)}
             </span>
-            <span className="text-lg md:text-xl font-medium text-slate-500 dark:text-slate-400">
+            <span className="text-lg md:text-xl font-medium text-emerald-300/70">
               / 20
             </span>
           </div>
         </div>
 
         <div className="text-end">
-          <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 block mb-1">
+          <span className="text-xs font-semibold text-emerald-200/80 block mb-1">
             {t.evaluationLevel}
           </span>
           <div
@@ -168,7 +168,7 @@ export const GradeDisplay: React.FC<GradeDisplayProps> = ({
         </div>
       </div>
 
-      <p className="text-xs text-slate-600 dark:text-slate-300 mt-3 pt-3 border-t border-slate-200 dark:border-slate-800 leading-relaxed">
+      <p className="text-xs text-emerald-100/90 mt-3 pt-3 border-t border-emerald-800/60 leading-relaxed">
         {levelDescription}
       </p>
     </div>
@@ -195,9 +195,9 @@ export const HorizontalBar: React.FC<HorizontalBarProps> = ({
 
   return (
     <div className="space-y-2 my-2">
-      <div className="flex items-center justify-between text-xs font-medium text-slate-700 dark:text-slate-300">
+      <div className="flex items-center justify-between text-xs font-medium text-emerald-100">
         <span className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#006233]" />
+          <span className="w-2.5 h-2.5 rounded-full bg-[#00A859]" />
           {t.readersLabel} ({readers})
         </span>
         <span className="flex items-center gap-1.5">
@@ -206,9 +206,9 @@ export const HorizontalBar: React.FC<HorizontalBarProps> = ({
         </span>
       </div>
 
-      <div className="h-4 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden flex shadow-inner">
+      <div className="h-4 w-full bg-[#0E281C] rounded-full overflow-hidden flex shadow-inner border border-emerald-900/60">
         <div
-          className="h-full bg-[#006233] transition-all duration-500 ease-out"
+          className="h-full bg-[#00A859] transition-all duration-500 ease-out"
           style={{ width: `${readerPct}%` }}
           title={`${t.readersLabel}: ${readerPct.toFixed(1)}%`}
         />
@@ -219,7 +219,7 @@ export const HorizontalBar: React.FC<HorizontalBarProps> = ({
         />
       </div>
 
-      <div className="flex justify-between text-[11px] text-slate-500 dark:text-slate-400 tabular-nums">
+      <div className="flex justify-between text-[11px] text-emerald-300/80 tabular-nums">
         <span>{readerPct.toFixed(1)}%</span>
         <span>{nonReaderPct.toFixed(1)}%</span>
       </div>
@@ -227,3 +227,46 @@ export const HorizontalBar: React.FC<HorizontalBarProps> = ({
   );
 };
 
+interface ClassComparisonChartProps {
+  classes: Array<{
+    className: string;
+    readerPercentage: number;
+    grade: number;
+    level: EvaluationLevel;
+  }>;
+  lang?: Language;
+  isDark?: boolean;
+}
+
+export const ClassComparisonChart: React.FC<ClassComparisonChartProps> = ({
+  classes,
+  lang = 'ar',
+  isDark = true,
+}) => {
+  if (classes.length === 0) return null;
+
+  return (
+    <div className="space-y-3 pt-2">
+      {classes.map((c, i) => {
+        const colors = getLevelColorClass(c.level, isDark);
+        return (
+          <div key={i} className="space-y-1">
+            <div className="flex items-center justify-between text-xs font-semibold text-emerald-100">
+              <span className="truncate max-w-[200px] sm:max-w-xs">{c.className}</span>
+              <span className="tabular-nums text-white font-bold">{c.readerPercentage.toFixed(1)}% ({c.grade.toFixed(1)}/20)</span>
+            </div>
+            <div className="h-3 w-full bg-[#0E281C] rounded-full overflow-hidden flex shadow-inner border border-emerald-900/60">
+              <div
+                className="h-full transition-all duration-500 ease-out rounded-full"
+                style={{
+                  width: `${Math.min(100, Math.max(5, c.readerPercentage))}%`,
+                  backgroundColor: colors.accentHex,
+                }}
+              />
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
