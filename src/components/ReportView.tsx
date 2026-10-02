@@ -133,7 +133,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
             {t.pedagogicalReportHeading}
           </div>
           <p className="text-xs text-slate-500 mt-1">
-            SPSS - Higher Education Academic Reading Statistics System
+            SPSS - Higher Education Academic & General Statistics System
           </p>
         </div>
 
@@ -258,7 +258,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
               rows={2}
               value={customObservations}
               onChange={(e) => setCustomObservations(e.target.value)}
-              placeholder={lang === 'ar' ? 'أضف ملاحظات أو توصيات خاصة للأستاذ(ة) المشرف أو المجلس العلمي...' : 'Ajoutez des observations académiques personnalisées...'}
+              placeholder={lang === 'ar' ? 'أضف ملاحظات أو توصيات إحصائية خاصة للأستاذ(ة) المشرف أو المجلس العلمي...' : 'Ajoutez des observations statistiques personnalisées...'}
               className="w-full p-2 text-xs border border-slate-300 rounded-lg bg-white"
             />
           </div>

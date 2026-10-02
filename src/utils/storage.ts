@@ -17,7 +17,7 @@ export const SAMPLE_CLASSES: ClassRecord[] = [
     grade: 16.9,
     level: 'excellent',
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3).toISOString(),
-    notes: 'إقبال كبير على المراجع البرمجية والكتب الرقمية والمنصات العلمية المفتوحة.',
+    notes: 'مؤشرات إحصائية متميزة، استجابة عالية في التقييم وتفوق في نسب التحقيق الإيجابية.',
   },
   {
     id: 'sample-2',
@@ -32,7 +32,7 @@ export const SAMPLE_CLASSES: ClassRecord[] = [
     grade: 17.3,
     level: 'excellent',
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString(),
-    notes: 'مطالعة مستمرة للمجلات الطبية والمراجع السريرية وزيارات منتظمة للمكتبة المركزية.',
+    notes: 'تحقيق نسب نجاح متقدمة واستقرار نوعي في المؤشرات الإحصائية العامة للعينة.',
   },
   {
     id: 'sample-3',
@@ -47,7 +47,7 @@ export const SAMPLE_CLASSES: ClassRecord[] = [
     grade: 13.6,
     level: 'good',
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 1).toISOString(),
-    notes: 'تفاعل جيد في قراءة كتب الاقتصاد الكلي والتحليل المالي وريادة الأعمال.',
+    notes: 'توزيع إحصائي متوازن مع اتجاه إيجابي في متوسط العلامات والنسب المحققة.',
   },
   {
     id: 'sample-4',
@@ -62,7 +62,7 @@ export const SAMPLE_CLASSES: ClassRecord[] = [
     grade: 15.3,
     level: 'excellent',
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 12).toISOString(),
-    notes: 'اهتمام بارز بالمراجع القانونية والجريدة الرسمية والتشريعات الجزائرية.',
+    notes: 'نسبة إنجاز مرتفعة في المؤشر العام مع تجانس ملحوظ في نتائج الفئات المقيّمة.',
   },
   {
     id: 'sample-5',
@@ -77,7 +77,7 @@ export const SAMPLE_CLASSES: ClassRecord[] = [
     grade: 12.2,
     level: 'good',
     createdAt: new Date().toISOString(),
-    notes: 'حاجة لدعم رصيد المكتبة بكتب التصميم المعماري الحديث والتراث العمراني الجزائري.',
+    notes: 'مؤشر إحصائي معتدل، يوصى بدراسة المتغيرات لرفع نسبة الإنجاز والتحصيل العام.',
   },
 ];
 

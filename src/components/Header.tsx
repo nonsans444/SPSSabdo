@@ -86,7 +86,7 @@ export const Header: React.FC<HeaderProps> = ({
               SPSS - University
             </span>
             <span className="text-xs sm:text-sm font-semibold text-[#6CE89F] tracking-wide leading-tight">
-              Reading Analytics
+              Statistical Analytics
             </span>
           </div>
 

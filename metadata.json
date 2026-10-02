@@ -1,6 +1,6 @@
 {
   "name": "SPSS - Students' Passion for Reading Statistics System",
-  "description": "نظام إحصاء شغف المطالعة والبحث الأكاديمي لدى الطلبة بمختلف التخصصات في الجامعات الجزائرية.",
+  "description": "نظام الحساب والتحليل الإحصائي الأكاديمي العام - حساب النسب والمؤشرات العامة والرسوم البيانية والعلامات التقديرية.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
